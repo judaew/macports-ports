@@ -13,7 +13,7 @@ compiler.cxx_standard   2014
 
 name                    nodejs16
 version                 16.17.0
-revision                2
+revision                3
 
 categories              devel net
 platforms               darwin
@@ -45,14 +45,12 @@ set py_ver              3.10
 set py_ver_nodot        [string map {. {}} ${py_ver}]
 
 depends_lib-append      port:python${py_ver_nodot} \
-                        port:zlib
+                        port:zlib \
+                        path:lib/pkgconfig/icu-uc.pc:icu
 
 if {![variant_isset openssl3]} {
     openssl.branch          1.1
 }
-
-# TODO: when icu is upgraded to v68.x, use MacPorts'.
-#depends_lib-append             path:lib/pkgconfig/icu-uc.pc:icu
 
 use_xcode               yes
 
@@ -111,8 +109,7 @@ pre-configure {
 }
 
 configure.args-append   --without-npm
-# TODO: when icu is upgraded to v68.x, use MacPorts'.
-# configure.args-append   --with-intl=system-icu
+configure.args-append   --with-intl=system-icu
 configure.args-append   --shared-openssl
 configure.args-append   --shared-openssl-includes=[openssl::include_dir]/openssl
 configure.args-append   --shared-openssl-libpath=[openssl::lib_dir]
