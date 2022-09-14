@@ -52,8 +52,6 @@ if {![variant_isset openssl3]} {
     openssl.branch          1.1
 }
 
-use_xcode               yes
-
 # error: 'atomic_load<v8::internal::OwnedVector<const unsigned char> >' is unavailable: introduced in macOS 10.9
 set min_darwin 13
 if { ${os.major} < ${min_darwin} } {
