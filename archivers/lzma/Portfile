@@ -9,7 +9,7 @@ legacysupport.newest_darwin_requires_legacy 16
 
 name            lzma
 version         22.01
-revision        0
+revision        1
 categories      archivers
 license         public-domain
 platforms       darwin
@@ -62,17 +62,34 @@ post-patch {
 
 use_configure   no
 
+installs_libs   no
+
 variant universal {}
 
 build.dir       ${worksrcpath}/CPP/7zip/Bundles/LzmaCon
-build.type      gnu
-build.args      -f makefile.gcc
 
-installs_libs   no
+if {${build_arch} eq "x86_64"} {
 
-destroot {
-    xinstall ${worksrcpath}/CPP/7zip/Bundles/LzmaCon/_o/lzma \
-        ${destroot}${prefix}/bin/lzma_alone
+    build.args-append -f ../../cmpl_mac_x64.mak
+
+    destroot {
+        xinstall -m 755 \
+                 -s ${worksrcpath}/CPP/7zip/Bundles/LzmaCon/b/m_x64/lzma \
+                 ${destroot}${prefix}/bin/lzma_alone
+    }
+
+} elseif {${build_arch} eq "arm64"} {
+
+    build.args-append -f ../../cmpl_mac_arm64.mak
+
+    destroot {
+        xinstall -m 755 \
+                 -s ${worksrcpath}/CPP/7zip/Bundles/LzmaCon/b/m_arm64/lzma \
+                 ${destroot}${prefix}/bin/lzma_alone
+    }
+}
+
+post-destroot {
     xinstall ${worksrcpath}/lzma.1 \
         ${destroot}${prefix}/share/man/man1/lzma_alone.1
 
